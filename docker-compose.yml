@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+
+  file_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    image: nodejs
+    container_name: file_api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - SERVER_PORT=$SERVER_PORT
+      - DB_HOST=mysqldb
+      - DB_PORT=$DB_PORT
+    ports:
+      - "11000:11000"
+    volumes:
+      - .:/file-app
+      - ./node_modules:/file-app/node_modules
+    networks:
+      - app-network
+    command: npm start
+    depends_on:
+      - mysqldb
+
+  mysqldb:
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_DATABASE=$DB_NAME
+      - MYSQL_USER=$DB_USER
+      - MYSQL_PASSWORD=$DB_PWD
+      - MYSQL_ROOT_PASSWORD=$DB_PWD
+    ports:
+      - '3306:3306'
+    volumes:
+      - dbdata:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+  node_modules:
