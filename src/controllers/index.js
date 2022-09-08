@@ -10,6 +10,9 @@
 // const db = new DB()
 // db.connect()
 
+import { db } from "../models/db.js";
+db.sequelize.sync({ force: true });
+
 //const {uuid} = require('uuidv4');
 
 const obj = {
