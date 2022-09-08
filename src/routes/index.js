@@ -1,37 +1,41 @@
+
+// const JWT_SECRET  = process.env.JWT_SECRET;
+// if (!JWT_SECRET) {
+//   throw new Error("Missing JWT_SECRET env");
+// };
+
+//import { authVerify } from "./auth";
+//const confirmToken = authVerify(JWT_SECRET);
+
 import {
-  shipnewProduct,
-  getProducts,
-  getProductWithID,
-  updateProduct,
-  deleteProduct
-} from '../controllers';
+  ping,
+  // shipnewProduct,
+  // getProducts,
+  // getProductWithID,
+  // updateProduct,
+  // deleteProduct
+} from '../controllers/index.js';
 
-const routes = (app) => {
-    app.route('/products')
-        .all((req,res, next) => {
-          let company = req.body.company
-          if (!company || company.length === 0 ) {
-            res.json({msg: 'Company name is required. Pls provide full data.'})
-          } else {
-            next()
-          }
-        })
-        .get(getProducts)
-        .post(shipnewProduct);
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import express from 'express';
+const router = express.Router();
 
-    app.route('/product')
-        // routes for a specific product
-        .all((req,res, next) => {
-          let product = req.body.product_id
-          if (!product || product.length === 0 ) {
-            res.json({msg: 'Product id is required. Pls provide full data.'})
-          } else {
-            next()
-          }
-        })
-        .get(getProductWithID)
-        .put(updateProduct)
-        .delete(deleteProduct)
-}
+//can restrict for specific IP's with options
+router.use(cors())
+router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.json());
 
-module.exports = routes;
+
+// router.post("/auth", authenticate);
+router.get("/alive", ping);
+// router.get("/movies", confirmToken, fetch);
+// router.post("/movies", confirmToken, create);
+// router.all("/*", fallback);
+router.use((error, _, res, __) => {
+  console.error(`Processing err: ${error}`);
+  return res.status(500).json({ error: "Processing error" });
+});
+      
+
+export {router};

@@ -15,6 +15,7 @@ services:
       - SERVER_PORT=$SERVER_PORT
       - DB_HOST=mysqldb
       - DB_PORT=$DB_PORT
+      - JWT_SECRET=$JWT_SECRET
     ports:
       - "11000:11000"
     volumes:
