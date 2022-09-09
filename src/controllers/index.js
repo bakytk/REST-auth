@@ -1,17 +1,16 @@
 
-// const JWT_SECRET = process.env.JWT_SECRET;
-// if (!JWT_SECRET) {
-//   throw new Error("Missing JWT_SECRET env");
-// };
+const { JWT_SECRET } = process.env;
+
 //const generateToken = authSign(JWT_SECRET);
 //import { authSign, AuthError } from "./auth";
 
-// import DB from "../db";
-// const db = new DB()
-// db.connect()
-
-import { db } from "../models/db.js";
+import { db } from "../db/index.js";
 db.sequelize.sync({ force: true });
+
+import jwt from 'jsonwebtoken';
+import { uuid } from 'uuidv4';
+
+let refreshtokens = {}
 
 //const {uuid} = require('uuidv4');
 
@@ -19,6 +18,39 @@ const obj = {
 
   ping: (req, res) => {
     return res.status(200).json({message: "Pong!"});
+  },
+
+  signup: async (req, res) => {
+    try {
+      //console.log("req", req.body, "\n", req);
+      let { id, password } = req.body;
+      if ( !(id && password)) {
+        res.status(401).json({
+          message: "Id or password absent!"
+        });
+      };
+      let result = await db.users.create({
+        "id": id,
+        "password": password
+      });
+      console.log("result", result);
+      console.log(uuid(), JWT_SECRET);
+      let data ={
+        id: id
+      }
+      let token = jwt.sign(data, JWT_SECRET, { expiresIn: '15m'});
+      let refreshtoken = uuid();
+      refreshtokens[refreshtoken] = id;
+      console.log("token", token);
+      res.json({
+        message: "Successful registration!",
+        access_token: token,
+        refresh_token: refreshtoken
+      });
+    } catch(e){
+      console.log("signup error", e);
+      res.send("Processing error.");
+    }
   },
 
   // shipnewProduct: async (req, res) => {
@@ -112,4 +144,4 @@ const obj = {
   // }
 }
 
-export const { ping } = obj;
+export const { ping, signup } = obj;
