@@ -97,13 +97,14 @@ const obj = {
           "refreshtoken": refreshtoken
         }
       });
-      console.log("fetched user by refresh token", result);
+      //console.log("fetched user by refresh token", result);
       if ( ! (result.length > 0) ) {
         res.status(401).json({
           message: "Invalid token. Re-signin!"
         });
       };
-      let token = jwt.sign(data, JWT_SECRET, { expiresIn: '10m'});
+      let { id } = result[0].dataValues;
+      let token = jwt.sign({"id": id}, JWT_SECRET, { expiresIn: '10m'});
       res.json({
         message: "Successful token refresh!",
         access_token: token,

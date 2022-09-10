@@ -4,7 +4,8 @@ import {
   download,
   get,
   remove,
-  update
+  update,
+  list
 } from './subcontrollers.js';
 
 import express from 'express';
@@ -21,7 +22,8 @@ const upload_file = multer({ dest: download_path })
 file_router.post("/upload", upload_file.single('sample'), upload);
 file_router.put("/update/:id", upload_file.single('sample'), update);
 file_router.post("/download/:id", download);
-file_router.get("/:id", get);
+file_router.get("/single/:id", get);
 file_router.delete("/delete/:id", remove);
+file_router.get("/list", list);
 
 export {file_router};

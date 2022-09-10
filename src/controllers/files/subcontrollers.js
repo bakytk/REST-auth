@@ -9,11 +9,12 @@ const functions = {
 
   upload: async (req, res) => {
     try {
+      //console.log("upload req", req);
       let { originalname: _name, mimetype, path, size }  = req.file;
       let extension = _name.split(".")[1];
       let content = await fs.readFile(path);
       await fs.rename(path, download_path + _name);
-      console.log(_name, mimetype, size);
+      //console.log(_name, mimetype, size);
       let result = await db.files.create({
         name: _name,
         extension: extension,
@@ -32,16 +33,13 @@ const functions = {
   download: async (req, res) => {
     try {
       let { id }  = req.params;
-      console.log("id", id);
+      //console.log("id", id);
       let result = await db.files.findAll({
         where: {
           "id": Number(id)
         }
       });
       let { name: filename } = result[0].dataValues;
-      // console.log("fetched file", name, fs_name, result);
-      // let content = await fs.readFile(download_path + name, "utf-8");
-      // console.log(content);
       res.sendFile(download_path + filename)
     } catch(e){
       console.log("upload error", e);
@@ -51,20 +49,20 @@ const functions = {
    
   get: async (req, res) => {
     try {
+      //console.log(req.url);
       let { id }  = req.params;
-      console.log("id", id);
       let result = await db.files.findAll({
-        where: {
-          "id": Number(id)
-        }
-      });
+          where: {
+            "id": Number(id)
+          }
+        });
       let { name, extension, size, mime_type } = result[0].dataValues;
       res.json({
-        name: name,
-        extension: extension,
-        size: size,
-        mimetype: mime_type
-      })
+          name: name,
+          extension: extension,
+          size: size,
+          mimetype: mime_type
+      });
     } catch(e){
       console.log("upload error", e);
       res.send("Processing error.");
@@ -74,7 +72,7 @@ const functions = {
   remove: async (req, res) => {
     try {
       let { id }  = req.params;
-      console.log("id", id);
+      //console.log("id", id);
       let query = await db.files.findAll({
         where: {
           "id": Number(id)
@@ -99,12 +97,12 @@ const functions = {
   update: async (req, res) => {
     try {
       let { id }  = req.params;
-      console.log("id", id);
+      //console.log("id", id);
       let { originalname: _name, mimetype, path, size }  = req.file;
       let extension = _name.split(".")[1];
       let content = await fs.readFile(path);
       await fs.rename(path, download_path + _name);
-      console.log(_name, mimetype, size);
+      //console.log(_name, mimetype, size);
       let result = await db.files.update({
         name: _name,
         extension: extension,
@@ -116,8 +114,41 @@ const functions = {
           id: Number(id)
         }
       });
-      console.log("result", result);
+      //console.log("result", result);
       res.send("File uploaded!")
+    } catch(e){
+      console.log("upload error", e);
+      res.send("Processing error.");
+    }
+  },
+
+  list: async (req, res) => {
+    try {
+      let { page, list_size }  = req.body;
+      page = page ? page : 1;
+      console.log("list req", req.body);
+      list_size = list_size ? list_size : 10;
+      let offset = (page-1)*list_size;
+      console.log(list_size, offset);
+      let result = await db.files.findAll({
+        limit: list_size,
+        offset: offset
+      });
+      //console.log("result", result);
+      let data = [];
+      for (let r of result){
+        let { id, name, extension, mime_type, size } = r.dataValues;
+        data.push({
+          id: id,
+          name: name,
+          mimetype: mime_type,
+          extension: extension,
+          size: size
+        })
+      }
+      res.json({
+        data: data
+      })
     } catch(e){
       console.log("upload error", e);
       res.send("Processing error.");
@@ -125,4 +156,4 @@ const functions = {
   },
 }
 
-export const { upload, download, get, remove, update } = functions;
+export const { upload, download, get, remove, update, list } = functions;

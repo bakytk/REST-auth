@@ -21,7 +21,7 @@ const router = express.Router();
 
 //can restrict for specific IP's with options
 router.use(cors())
-router.use("/", bodyParser.json());
+router.use("/*", bodyParser.json());
 router.use("/file", file_router);
 
 router.get("/alive", ping);
