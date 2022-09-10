@@ -1,11 +1,9 @@
 
-// const JWT_SECRET  = process.env.JWT_SECRET;
-// if (!JWT_SECRET) {
-//   throw new Error("Missing JWT_SECRET env");
-// };
-
 //import { authVerify } from "./auth";
 //const confirmToken = authVerify(JWT_SECRET);
+
+//const generateToken = authSign(JWT_SECRET);
+//import { authSign, AuthError } from "./auth";
 
 import {
   ping,
@@ -14,6 +12,7 @@ import {
   newToken,
   fallback
 } from '../controllers/index.js';
+import { file_router } from '../controllers/files/index.js';
 
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -22,14 +21,13 @@ const router = express.Router();
 
 //can restrict for specific IP's with options
 router.use(cors())
-//router.use(bodyParser.urlencoded({ extended: true }));
 router.use("/", bodyParser.json());
+router.use("/file", file_router);
 
 router.get("/alive", ping);
 router.post("/signup", signup);
 router.post("/signin", signin);
 router.post("/signin/new_token", newToken);
-// router.post("/movies", confirmToken, create);
 router.all("/*", fallback);
 router.use((error, _, res, __) => {
   console.error(`Processing err: ${error}`);
