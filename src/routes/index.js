@@ -9,12 +9,10 @@
 
 import {
   ping,
-  signup
-  // shipnewProduct,
-  // getProducts,
-  // getProductWithID,
-  // updateProduct,
-  // deleteProduct
+  signup,
+  signin,
+  newToken,
+  fallback
 } from '../controllers/index.js';
 
 import cors from 'cors';
@@ -25,15 +23,14 @@ const router = express.Router();
 //can restrict for specific IP's with options
 router.use(cors())
 //router.use(bodyParser.urlencoded({ extended: true }));
-//router.use(bodyParser.json());
+router.use("/", bodyParser.json());
 
-
-// router.post("/auth", authenticate);
 router.get("/alive", ping);
-router.post("/signup", bodyParser.json(), signup);
-// router.get("/movies", confirmToken, fetch);
+router.post("/signup", signup);
+router.post("/signin", signin);
+router.post("/signin/new_token", newToken);
 // router.post("/movies", confirmToken, create);
-// router.all("/*", fallback);
+router.all("/*", fallback);
 router.use((error, _, res, __) => {
   console.error(`Processing err: ${error}`);
   return res.status(500).json({ error: "Processing error" });

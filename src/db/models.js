@@ -35,6 +35,10 @@ const obj = {
       password: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      refreshToken: {
+        type: Sequelize.STRING,
+        allowNull: false,
       }
     });
     return User;
