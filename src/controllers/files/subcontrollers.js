@@ -9,7 +9,7 @@ const functions = {
 
   upload: async (req, res) => {
     try {
-      //console.log("upload req", req);
+      console.log("upload req", req);
       let { originalname: _name, mimetype, path, size }  = req.file;
       let extension = _name.split(".")[1];
       let content = await fs.readFile(path);
@@ -126,10 +126,10 @@ const functions = {
     try {
       let { page, list_size }  = req.body;
       page = page ? page : 1;
-      console.log("list req", req.body);
+      //console.log("list req", req.body);
       list_size = list_size ? list_size : 10;
       let offset = (page-1)*list_size;
-      console.log(list_size, offset);
+      //console.log(list_size, offset);
       let result = await db.files.findAll({
         limit: list_size,
         offset: offset

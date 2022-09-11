@@ -1,9 +1,8 @@
 
-//import { authVerify } from "./auth";
-//const confirmToken = authVerify(JWT_SECRET);
+const { JWT_SECRET } = process.env;
 
-//const generateToken = authSign(JWT_SECRET);
-//import { authSign, AuthError } from "./auth";
+import { authVerify } from "../controllers/auth.js";
+const confirmToken = authVerify(JWT_SECRET);
 
 import {
   ping,
@@ -22,7 +21,7 @@ const router = express.Router();
 //can restrict for specific IP's with options
 router.use(cors())
 router.use("/*", bodyParser.json());
-router.use("/file", file_router);
+router.use("/file", confirmToken, file_router);
 
 router.get("/alive", ping);
 router.post("/signup", signup);
