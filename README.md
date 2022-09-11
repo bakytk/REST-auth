@@ -7,7 +7,7 @@
 
 The purpose of this app is to build a CRUD API on Express.js, that stores files in MySql database in binary format. The app is containerized with Docker Compose.
 
-The script is relatively straightforward and organized with self-explanatory file names and folders. To run it, just unzip the file and run the following:
+The script is relatively straightforward and organized with self-explanatory file names and folders:
 
 `
 npm install
