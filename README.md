@@ -1,5 +1,5 @@
 
-<img src="https://i.ibb.co/bQXcP2V/mysql.png" width="500"><br/><br/>
+<img src="https://i.ibb.co/bQXcP2V/mysql.png" width="300"><br/><br/>
 
 
 **File-API**
