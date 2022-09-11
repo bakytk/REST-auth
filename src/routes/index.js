@@ -9,6 +9,8 @@ import {
   signup,
   signin,
   newToken,
+  info,
+  logout,
   fallback
 } from '../controllers/index.js';
 import { file_router } from '../controllers/files/index.js';
@@ -27,6 +29,8 @@ router.get("/alive", ping);
 router.post("/signup", signup);
 router.post("/signin", signin);
 router.post("/signin/new_token", newToken);
+router.get("/info", confirmToken, info);
+router.get("/logout", confirmToken, logout);
 router.all("/*", fallback);
 router.use((error, _, res, __) => {
   console.error(`Processing err: ${error}`);

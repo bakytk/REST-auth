@@ -1,9 +1,6 @@
 
 const { JWT_SECRET } = process.env;
 
-//const generateToken = authSign(JWT_SECRET);
-//import { authSign, AuthError } from "./auth";
-
 import { db } from "../db/index.js";
 db.sequelize.sync({ force: true });
 

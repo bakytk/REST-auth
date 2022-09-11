@@ -9,7 +9,7 @@ const functions = {
 
   upload: async (req, res) => {
     try {
-      console.log("upload req", req);
+      //console.log("upload req", req);
       let { originalname: _name, mimetype, path, size }  = req.file;
       let extension = _name.split(".")[1];
       let content = await fs.readFile(path);
